@@ -9,6 +9,11 @@ public:
         return take || nottake ;
     }
     bool checkPowersOfThree(int n) {
-        return allpos(0,n);
+        while(n)
+        {
+            if(n%3==2) return 0;
+            n/=3;
+        }
+        return 1;
     }
 };
