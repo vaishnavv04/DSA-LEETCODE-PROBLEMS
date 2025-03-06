@@ -1,34 +1,43 @@
 class Solution {
 public:
-    void dfs(vector<vector<int>>& adj, int node, vector<bool>& vis) {
-        vis[node] = 1;
-        for(auto it:adj[node])
-        {
-            if(!vis[it])
+    int findpar(int node,vector<int>&par)
+    {
+        if(node==par[node])
+        return node;
+        return par[node] = findpar(par[node],par);
+    }
+    void unionbysize(int x,int y,vector<int>&par,vector<int>&size)
+    {
+            int upx = findpar(x,par) , upy = findpar(y,par);
+            if(upx==upy)
+            return ;
+            if(size[upx]>=size[upy])
             {
-                dfs(adj,it,vis);
+                par[upy] = upx;
+                size[upx]+=size[upy];
             }
-        }
+            else
+            {
+                par[upx] = upy;
+                size[upy]+=size[upx];
+            }
     }
     int makeConnected(int n, vector<vector<int>>& connections) {
         if(connections.size()<n-1)
         return -1;
-        vector<vector<int>> adj(n);
-        for(auto it:connections)
+        vector<int> par(n),size(n,1);
+        for(int i=0;i<n;i++)
+        par[i] = i;
+        for(auto connection:connections)
         {
-            adj[it[0]].push_back(it[1]);
-            adj[it[1]].push_back(it[0]);
+            unionbysize(connection[0],connection[1],par,size);
         }
-        vector<bool> vis(n);
-        int c = 0;
+        unordered_set<int> s;
         for(int i=0;i<n;i++)
         {
-            if(!vis[i])
-            {
-                c++;
-                dfs(adj,i,vis);
-            }
+            findpar(i,par);
+            s.insert(par[i]);
         }
-        return c-1;
+        return s.size()-1;
     }
 };
