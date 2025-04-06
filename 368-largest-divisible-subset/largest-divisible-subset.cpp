@@ -4,6 +4,7 @@ public:
         int n = nums.size();
         sort(nums.begin(),nums.end());
         unordered_map<int,vector<int>> m;
+        vector<int> ans;
         for(int i=0;i<n;i++)
         {
             m[nums[i]].push_back(nums[i]);
@@ -17,12 +18,8 @@ public:
                 }
             }
             m[nums[i]].insert(m[nums[i]].end(),temp.begin(),temp.end());
-        }
-        vector<int> ans;
-        for(auto [e,v]:m)
-        {
-            if(v.size()>ans.size())
-            ans = v;
+            if(ans.size()<m[nums[i]].size())
+            ans = m[nums[i]]; 
         }
         return ans;
     }
